@@ -54,7 +54,7 @@ cpython-3.12.11-linux-x86_64-gnu                   <download available>
 ```bash
 uv python install cpython-3.12.11-linux-x86_64-gnu
 ```
-
+**安裝本專案相依套件**
 ```bash
 uv pip install -r pyproject.toml
 ```

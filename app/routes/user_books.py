@@ -217,3 +217,4 @@ def rate_book() -> str:
     return redirect(url_for('books.book_detail', book_id=book_id))
 
 
+

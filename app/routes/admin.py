@@ -120,3 +120,4 @@ def book_delete(book_id: int) -> str:
     return redirect(url_for('admin.book_list'))
 
 
+

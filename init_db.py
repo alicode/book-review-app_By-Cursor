@@ -12,3 +12,4 @@ with app.app_context():
     print("資料庫初始化完成！")
 
 
+

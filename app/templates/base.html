@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}書籍評論網站{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('books.index') }}" class="logo">📚 書籍評論</a>
+            <div class="nav-links">
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('books.index') }}">首頁</a>
+                    <a href="{{ url_for('user_books.my_books') }}">我的書單</a>
+                    <a href="{{ url_for('admin.book_list') }}">管理書籍</a>
+                    <span>歡迎，{{ session.get('username') }}</span>
+                    <a href="{{ url_for('auth.logout') }}">登出</a>
+                {% else %}
+                    <a href="{{ url_for('books.index') }}">首頁</a>
+                    <a href="{{ url_for('auth.login') }}">登入</a>
+                    <a href="{{ url_for('auth.register') }}">註冊</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 書籍評論網站</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
+
+

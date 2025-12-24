@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }} - 書籍評論網站{% endblock %}
+
+{% block content %}
+<div class="book-detail-page">
+    <div class="book-header">
+        <div class="book-cover-large">
+            {% if book.cover_image_url %}
+            <img src="{{ book.cover_image_url }}" alt="{{ book.title }}">
+            {% else %}
+            <div class="book-cover-placeholder-large">📖</div>
+            {% endif %}
+        </div>
+        <div class="book-info-large">
+            <h1>{{ book.title }}</h1>
+            <p class="author">作者：{{ book.author or '未知作者' }}</p>
+            {% if avg_rating %}
+            <div class="rating-large">
+                <span class="stars">⭐⭐⭐⭐⭐</span>
+                <span class="rating-score">{{ "%.2f"|format(avg_rating) }}</span>
+                <span class="rating-count">({{ rating_count }} 人評分)</span>
+            </div>
+            {% else %}
+            <p class="no-rating">尚無評分</p>
+            {% endif %}
+            <div class="collection-info">
+                <span>📚 {{ collection_count }} 人收藏</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-description">
+        <h2>簡介</h2>
+        <p>{{ book.description or '暫無簡介' }}</p>
+    </div>
+
+    {% if user %}
+    <div class="user-actions">
+        <h2>我的操作</h2>
+        
+        {% if user_book %}
+        <div class="action-section">
+            <p>書單狀態：<strong>{{ '已讀' if user_book.status == 'read' else '想讀' }}</strong></p>
+            <form method="POST" action="{{ url_for('user_books.update_status') }}" style="display: inline;">
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <select name="status" onchange="this.form.submit()">
+                    <option value="wishlist" {% if user_book.status == 'wishlist' %}selected{% endif %}>想讀</option>
+                    <option value="read" {% if user_book.status == 'read' %}selected{% endif %}>已讀</option>
+                </select>
+            </form>
+            <form method="POST" action="{{ url_for('user_books.remove_book') }}" style="display: inline; margin-left: 10px;">
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <button type="submit" class="btn btn-secondary">從書單移除</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="action-section">
+            <form method="POST" action="{{ url_for('user_books.add_book') }}">
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <select name="status" required>
+                    <option value="wishlist">想讀</option>
+                    <option value="read">已讀</option>
+                </select>
+                <button type="submit" class="btn btn-primary">加入書單</button>
+            </form>
+        </div>
+        {% endif %}
+
+        <div class="action-section">
+            <h3>評分</h3>
+            {% if user_rating %}
+            <p>您的評分：<strong>{{ user_rating.score }} 星</strong></p>
+            {% endif %}
+            <form method="POST" action="{{ url_for('user_books.rate_book') }}">
+                <input type="hidden" name="book_id" value="{{ book.id }}">
+                <div class="rating-input">
+                    <label>選擇評分：</label>
+                    <select name="score" required>
+                        <option value="">請選擇</option>
+                        <option value="1" {% if user_rating and user_rating.score == 1 %}selected{% endif %}>1 星</option>
+                        <option value="2" {% if user_rating and user_rating.score == 2 %}selected{% endif %}>2 星</option>
+                        <option value="3" {% if user_rating and user_rating.score == 3 %}selected{% endif %}>3 星</option>
+                        <option value="4" {% if user_rating and user_rating.score == 4 %}selected{% endif %}>4 星</option>
+                        <option value="5" {% if user_rating and user_rating.score == 5 %}selected{% endif %}>5 星</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">{{ '更新評分' if user_rating else '提交評分' }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="login-prompt">
+        <p>請<a href="{{ url_for('auth.login') }}">登入</a>後才能收藏書籍和評分</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

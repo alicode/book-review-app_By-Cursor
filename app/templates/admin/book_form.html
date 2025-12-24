@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ '編輯書籍' if book else '新增書籍' }} - 書籍評論網站{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <h1>{{ '編輯書籍' if book else '新增書籍' }}</h1>
+    
+    <form method="POST" class="admin-form">
+        <div class="form-group">
+            <label for="title">書名 *</label>
+            <input type="text" id="title" name="title" value="{{ book.title if book else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="author">作者</label>
+            <input type="text" id="author" name="author" value="{{ book.author if book else '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label for="description">簡介</label>
+            <textarea id="description" name="description" rows="5">{{ book.description if book else '' }}</textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="cover_image_url">封面圖片 URL</label>
+            <input type="url" id="cover_image_url" name="cover_image_url" value="{{ book.cover_image_url if book else '' }}">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ '更新' if book else '新增' }}</button>
+            <a href="{{ url_for('admin.book_list') }}" class="btn btn-secondary">取消</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+

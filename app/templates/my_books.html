@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}我的書單 - 書籍評論網站{% endblock %}
+
+{% block content %}
+<div class="my-books-page">
+    <h1>我的書單</h1>
+
+    <div class="books-section">
+        <h2>想讀（{{ wishlist|length }}）</h2>
+        {% if wishlist %}
+        <div class="book-grid">
+            {% for item in wishlist %}
+            <div class="book-card">
+                {% if item.book.cover_image_url %}
+                <img src="{{ item.book.cover_image_url }}" alt="{{ item.book.title }}" class="book-cover">
+                {% else %}
+                <div class="book-cover-placeholder">📖</div>
+                {% endif %}
+                <h3><a href="{{ url_for('books.book_detail', book_id=item.book.id) }}">{{ item.book.title }}</a></h3>
+                <p class="author">{{ item.book.author or '未知作者' }}</p>
+                {% if item.rating %}
+                <div class="rating">
+                    <span>我的評分：</span>
+                    <span class="stars">⭐</span>
+                    <span>{{ item.rating.score }} 星</span>
+                </div>
+                {% endif %}
+                {% if item.avg_rating %}
+                <div class="avg-rating">
+                    平均：{{ "%.2f"|format(item.avg_rating) }} 星
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">尚無想讀書籍</p>
+        {% endif %}
+    </div>
+
+    <div class="books-section">
+        <h2>已讀（{{ read_list|length }}）</h2>
+        {% if read_list %}
+        <div class="book-grid">
+            {% for item in read_list %}
+            <div class="book-card">
+                {% if item.book.cover_image_url %}
+                <img src="{{ item.book.cover_image_url }}" alt="{{ item.book.title }}" class="book-cover">
+                {% else %}
+                <div class="book-cover-placeholder">📖</div>
+                {% endif %}
+                <h3><a href="{{ url_for('books.book_detail', book_id=item.book.id) }}">{{ item.book.title }}</a></h3>
+                <p class="author">{{ item.book.author or '未知作者' }}</p>
+                {% if item.rating %}
+                <div class="rating">
+                    <span>我的評分：</span>
+                    <span class="stars">⭐</span>
+                    <span>{{ item.rating.score }} 星</span>
+                </div>
+                {% else %}
+                <p class="no-rating-prompt">
+                    <a href="{{ url_for('books.book_detail', book_id=item.book.id) }}">為此書評分</a>
+                </p>
+                {% endif %}
+                {% if item.avg_rating %}
+                <div class="avg-rating">
+                    平均：{{ "%.2f"|format(item.avg_rating) }} 星
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">尚無已讀書籍</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+

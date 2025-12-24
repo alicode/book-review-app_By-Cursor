@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}首頁 - 書籍評論網站{% endblock %}
+
+{% block content %}
+<div class="home-page">
+    {% if session.get('user_id') and user_stats %}
+    <section class="user-stats">
+        <h2>我的書單摘要</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>想讀</h3>
+                <p class="stat-number">{{ user_stats.wishlist_count }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>已讀</h3>
+                <p class="stat-number">{{ user_stats.read_count }}</p>
+            </div>
+        </div>
+        <a href="{{ url_for('user_books.my_books') }}" class="btn btn-primary">查看我的書單</a>
+    </section>
+    {% endif %}
+
+    <section class="top-rated">
+        <h2>熱門評分排行榜（Top 10）</h2>
+        {% if top_rated %}
+        <div class="book-grid">
+            {% for item in top_rated %}
+            <div class="book-card">
+                {% if item.cover_image_url %}
+                <img src="{{ item.cover_image_url }}" alt="{{ item.title }}" class="book-cover">
+                {% else %}
+                <div class="book-cover-placeholder">📖</div>
+                {% endif %}
+                <h3><a href="{{ url_for('books.book_detail', book_id=item.id) }}">{{ item.title }}</a></h3>
+                <p class="author">{{ item.author or '未知作者' }}</p>
+                <div class="rating">
+                    <span class="stars">⭐</span>
+                    <span>{{ "%.2f"|format(item.avg_score) }}</span>
+                    <span class="rating-count">({{ item.rating_count }} 人評分)</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">尚無評分資料</p>
+        {% endif %}
+    </section>
+
+    <section class="top-collected">
+        <h2>熱門收藏排行榜（Top 10）</h2>
+        {% if top_collected %}
+        <div class="book-grid">
+            {% for item in top_collected %}
+            <div class="book-card">
+                {% if item.cover_image_url %}
+                <img src="{{ item.cover_image_url }}" alt="{{ item.title }}" class="book-cover">
+                {% else %}
+                <div class="book-cover-placeholder">📖</div>
+                {% endif %}
+                <h3><a href="{{ url_for('books.book_detail', book_id=item.id) }}">{{ item.title }}</a></h3>
+                <p class="author">{{ item.author or '未知作者' }}</p>
+                <div class="collection-count">
+                    <span>📚 {{ item.collection_count }} 人收藏</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">尚無收藏資料</p>
+        {% endif %}
+    </section>
+
+    <section class="all-books">
+        <h2>全部書籍</h2>
+        {% if books %}
+        <div class="book-list">
+            {% for book in books %}
+            <div class="book-item">
+                {% if book.cover_image_url %}
+                <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" class="book-thumbnail">
+                {% else %}
+                <div class="book-thumbnail-placeholder">📖</div>
+                {% endif %}
+                <div class="book-info">
+                    <h3><a href="{{ url_for('books.book_detail', book_id=book.id) }}">{{ book.title }}</a></h3>
+                    <p class="author">{{ book.author or '未知作者' }}</p>
+                    {% if book_ratings.get(book.id) %}
+                    <div class="rating">
+                        <span class="stars">⭐</span>
+                        <span>{{ "%.2f"|format(book_ratings[book.id].avg_score) }}</span>
+                        <span class="rating-count">({{ book_ratings[book.id].count }} 人評分)</span>
+                    </div>
+                    {% else %}
+                    <p class="no-rating">尚無評分</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="empty-state">尚無書籍資料</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}書籍管理 - 書籍評論網站{% endblock %}
+
+{% block content %}
+<div class="admin-page">
+    <div class="admin-header">
+        <h1>書籍管理</h1>
+        <a href="{{ url_for('admin.book_new') }}" class="btn btn-primary">新增書籍</a>
+    </div>
+
+    <div class="admin-table-container">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>封面</th>
+                    <th>書名</th>
+                    <th>作者</th>
+                    <th>建立時間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>
+                        {% if book.cover_image_url %}
+                        <img src="{{ book.cover_image_url }}" alt="{{ book.title }}" class="book-thumbnail-small">
+                        {% else %}
+                        <div class="book-thumbnail-placeholder-small">📖</div>
+                        {% endif %}
+                    </td>
+                    <td><a href="{{ url_for('books.book_detail', book_id=book.id) }}">{{ book.title }}</a></td>
+                    <td>{{ book.author or '-' }}</td>
+                    <td>{{ book.created_at.strftime('%Y-%m-%d %H:%M') if book.created_at else '-' }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.book_edit', book_id=book.id) }}" class="btn btn-sm btn-secondary">編輯</a>
+                        <form method="POST" action="{{ url_for('admin.book_delete', book_id=book.id) }}" style="display: inline;" onsubmit="return confirm('確定要刪除這本書嗎？');">
+                            <button type="submit" class="btn btn-sm btn-danger">刪除</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="empty-state">尚無書籍資料</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

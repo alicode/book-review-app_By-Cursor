@@ -29,6 +29,31 @@ pip install -r requirements.txt
 ```
 
 或使用 uv：
+假若沒有uv 程式,需要[安裝uv](https://docs.astral.sh/uv/getting-started/installation/) ,如下
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**安裝 python 虛擬環境**
+python 3.12 以上
+```bash
+uv venv -p 3.12 env
+source env/bin/activate
+```
+假若沒有 python3.12 ,需要透過 uv 安裝python3.12
+```bash
+uv python list
+```
+```
+cpython-3.14.0rc1-linux-x86_64-gnu                 <download available>
+cpython-3.14.0rc1+freethreaded-linux-x86_64-gnu    <download available>
+cpython-3.13.5-linux-x86_64-gnu                    <download available>
+cpython-3.13.5+freethreaded-linux-x86_64-gnu       <download available>
+cpython-3.12.11-linux-x86_64-gnu                   <download available>
+```
+```bash
+uv python install cpython-3.12.11-linux-x86_64-gnu
+```
 
 ```bash
 uv pip install -r pyproject.toml
